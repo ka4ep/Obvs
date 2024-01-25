@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using Obvs.Extensions;
 
 namespace Obvs
 {
