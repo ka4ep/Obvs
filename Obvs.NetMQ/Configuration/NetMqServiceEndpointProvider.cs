@@ -23,7 +23,7 @@ namespace Obvs.NetMQ.Configuration
         private readonly string _commandAddress;
         private readonly string _eventAddress;
         
-        public NetMqServiceEndpointProvider(string serviceName, string address, int port, 
+        public NetMqServiceEndpointProvider(string serviceName, string address, NetMqPorts ports,
             IMessageSerializer serializer, IMessageDeserializerFactory deserializerFactory, 
             Func<Assembly, bool> assemblyFilter, Func<Type, bool> typeFilter)
             : base(serviceName)
@@ -32,10 +32,10 @@ namespace Obvs.NetMQ.Configuration
             _deserializerFactory = deserializerFactory;
             _assemblyFilter = assemblyFilter;
             _typeFilter = typeFilter;
-            _requestAddress = string.Format("{0}:{1}", address, port + 0);
-            _responseAddress = string.Format("{0}:{1}", address, port + 1);
-            _commandAddress = string.Format("{0}:{1}", address, port + 2);
-            _eventAddress = string.Format("{0}:{1}", address, port + 3);
+            _requestAddress = string.Format("{0}:{1}", address, ports.Request);
+            _responseAddress = string.Format("{0}:{1}", address, ports.Response);
+            _commandAddress = string.Format("{0}:{1}", address, ports.Command);
+            _eventAddress = string.Format("{0}:{1}", address, ports.Event);
         }
 
         public override IServiceEndpoint<TMessage, TCommand, TEvent, TRequest, TResponse> CreateEndpoint()

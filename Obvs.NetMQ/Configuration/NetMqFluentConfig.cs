@@ -2,7 +2,6 @@
 using System.Reflection;
 using Obvs.Configuration;
 using Obvs.Serialization;
-using Obvs.Types;
 
 namespace Obvs.NetMQ.Configuration
 {
@@ -34,6 +33,7 @@ namespace Obvs.NetMQ.Configuration
         where TResponse : class, TMessage
     {
         ICanSpecifyEndpointSerializers<TMessage, TCommand, TEvent, TRequest, TResponse> OnPort(int port);
+        ICanSpecifyEndpointSerializers<TMessage, TCommand, TEvent, TRequest, TResponse> OnPorts(NetMqPorts ports);
     }
 
     internal class NetMqFluentConfig<TServiceMessage, TMessage, TCommand, TEvent, TRequest, TResponse> : 
@@ -52,7 +52,7 @@ namespace Obvs.NetMQ.Configuration
         private readonly ICanAddEndpoint<TMessage, TCommand, TEvent, TRequest, TResponse> _canAddEndpoint;
         private string _serviceName;
         private Uri _address;
-        private int _port;
+        private NetMqPorts _ports;
         private IMessageSerializer _serializer;
         private IMessageDeserializerFactory _deserializerFactory;
         private Func<Assembly, bool> _assemblyFilter;
@@ -77,16 +77,21 @@ namespace Obvs.NetMQ.Configuration
 
         public ICanSpecifyEndpointSerializers<TMessage, TCommand, TEvent, TRequest, TResponse> OnPort(int port)
         {
-            _port = port;
+            _ports = new NetMqPorts(port);
             return this;
         }
-        
+        public ICanSpecifyEndpointSerializers<TMessage, TCommand, TEvent, TRequest, TResponse> OnPorts(NetMqPorts ports)
+        {
+            _ports = ports;
+            return this;
+        }
+
         private NetMqServiceEndpointProvider<TServiceMessage, TMessage, TCommand, TEvent, TRequest, TResponse> CreateProvider()
         {
             return new NetMqServiceEndpointProvider<TServiceMessage, TMessage, TCommand, TEvent, TRequest, TResponse>(
                 _serviceName, 
                 _address.OriginalString,
-                _port, 
+                _ports, 
                 _serializer, 
                 _deserializerFactory,
                 _assemblyFilter, 
