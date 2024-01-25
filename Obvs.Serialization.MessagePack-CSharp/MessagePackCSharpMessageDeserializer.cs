@@ -7,21 +7,20 @@ namespace Obvs.Serialization.MessagePack
     public class MessagePackCSharpMessageDeserializer<TMessage> : MessageDeserializerBase<TMessage> 
         where TMessage : class
     {
-        private readonly IFormatterResolver _resolver;
+        private readonly MessagePackSerializerOptions _options;
 
-        public MessagePackCSharpMessageDeserializer()
-            : this(null)
+        public MessagePackCSharpMessageDeserializer() : this(null)
         {
         }
 
         public MessagePackCSharpMessageDeserializer(IFormatterResolver resolver)
         {
-            _resolver = resolver ?? MessagePackSerializer.DefaultResolver;
+            _options = MessagePackSerializer.DefaultOptions.WithResolver(resolver ?? MessagePackSerializer.DefaultOptions.Resolver);
         }
 
         public override TMessage Deserialize(Stream source)
         {
-            return MessagePackSerializer.Deserialize<TMessage>(source, _resolver);
+            return MessagePackSerializer.Deserialize<TMessage>(stream: source, options: _options);
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿using System;
+﻿using MessagePack;
+using Obvs.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using MessagePack;
-using MessagePack.Resolvers;
-using Obvs.Configuration;
 
 namespace Obvs.Serialization.MessagePack
 {
@@ -19,7 +18,7 @@ namespace Obvs.Serialization.MessagePack
 
         public MessagePackCSharpMessageDeserializerFactory(IFormatterResolver resolver)
         {
-            _resolver = resolver ?? MessagePackSerializer.DefaultResolver;
+            _resolver = resolver ?? MessagePackSerializer.DefaultOptions.Resolver;
         }
 
         public IEnumerable<IMessageDeserializer<TMessage>> Create<TMessage, TServiceMessage>(Func<Assembly, bool> assemblyFilter = null, Func<Type, bool> typeFilter = null)
