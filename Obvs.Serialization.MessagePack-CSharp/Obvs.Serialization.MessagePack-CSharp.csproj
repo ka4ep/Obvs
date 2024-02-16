@@ -5,7 +5,7 @@
     <Description>MessagePack-CSharp (https://github.com/neuecc/MessagePack-CSharp) serialization for Obvs</Description>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>6.1.0</Version>
+    <Version>6.2.0</Version>
     <PackageReleaseNotes>Minor dependency update</PackageReleaseNotes>
   </PropertyGroup>
 

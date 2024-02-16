@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NetMQ;
 using NetMQ.Sockets;
 using Obvs.NetMQ.Configuration;
@@ -44,7 +45,9 @@ namespace Obvs.NetMQ.Extensions
         {
             if (message.FrameCount != ExpectedFrameCount)
             {
-                throw new Exception(string.Format("Expected message with {0} frames (topic,typeName,dataType,data) but received {1}", ExpectedFrameCount, message.FrameCount));
+                //throw new Exception(string.Format("Expected message with {0} frames (topic,typeName,dataType,data) but received {1}", ExpectedFrameCount, message.FrameCount));
+                throw new InvalidMessageException(string.Format("Expected message with {0} frames (topic,typeName,dataType,data) but received {1}", ExpectedFrameCount, message.FrameCount),
+                                                  message.Select(m => new Tuple<byte[], string>(m.ToByteArray(copy:true), m.ConvertToString())).ToArray());
             }
 
             topic = message[0].ConvertToString();
@@ -70,7 +73,7 @@ namespace Obvs.NetMQ.Extensions
                     socket.Bind(address);
                     break;
                 default:
-                    throw new ArgumentException(string.Format("Unknown SocketType {0}", socketType), "socketType");
+                    throw new ArgumentException(string.Format("Unknown SocketType {0}", socketType), nameof(socketType));
             }
         }
 
@@ -85,7 +88,7 @@ namespace Obvs.NetMQ.Extensions
                     socket.Unbind(address);
                     break;
                 default:
-                    throw new ArgumentException(string.Format("Unknown SocketType {0}", socketType), "socketType");
+                    throw new ArgumentException(string.Format("Unknown SocketType {0}", socketType), nameof(socketType));
             }
             socket.Close();
         }

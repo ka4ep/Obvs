@@ -42,10 +42,10 @@ namespace Obvs.NetMQ
 
                     subscribedEvent.Wait();
 
-                    return Disposable.Create(() =>
+                    return Disposable.Create(async () =>
                     {
                         tokenSource.Cancel();
-                        task.Wait();
+                        await task;
                     });
                 });
             }
